@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.0.1
+    restart: always
+    environment:
+      PMA_HOST: db
+    ports:
+      - '5010:80'
+    depends_on:
+      - db
+
+  management:
+    build:
+      context: ./management
+      dockerfile: Dockerfile
+    working_dir: /usr/src/app
+    volumes:
+      - ./management:/usr/src/app
+    networks:
+      - app-network
+    links:
+      - rabbitmq
+    ports:
+      - 5000:5000
+    restart: always
+    depends_on:
+      - db
+
+  redis:
+    image: redis
+    container_name: cache
+    expose: :
+      
+
+  redirection:
+    build:
+      context: ./redirection
+      dockerfile: Dockerfile
+    working_dir: /usr/src/app
+    volumes:
+      - ./redirection:/usr/src/app
+    networks:
+      - app-network
+    links:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3.7.4
+    networks:
+      - app-network
+
+  db:
+    build: ./mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 45QgPdf7NP
+      MYSQL_DATABASE: qJkXGOrBPl
+      MYSQL_USER: qJkXGOrBPl
+      MYSQL_PASSWORD: 45QgPdf7NP
+
+networks:
+  app-network:
+    driver: bridge
