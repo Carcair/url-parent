@@ -15,7 +15,7 @@ services:
     build:
       context: ./management
       dockerfile: Dockerfile
-    working_dir: /usr/src/app
+    working_dir: /usr/app
     volumes:
       - ./management:/usr/src/app
     networks:
@@ -31,20 +31,28 @@ services:
   redis:
     image: redis
     container_name: cache
-    expose: :
-      
+    expose: 
+      - 6379
+
 
   redirection:
     build:
       context: ./redirection
       dockerfile: Dockerfile
-    working_dir: /usr/src/app
+    working_dir: /usr/app
     volumes:
       - ./redirection:/usr/src/app
     networks:
       - app-network
     links:
       - rabbitmq
+    ports:
+      - 5005:5005
+    restart: always
+    links:
+      - redis
+    environment: 
+      - REDIS_URL=redis://cache
 
   rabbitmq:
     image: rabbitmq:3.7.4
