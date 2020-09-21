@@ -1,0 +1,6 @@
+[submodule "management"]
+	path = management
+	url = https://github.com/Carcair/management.git
+[submodule "redirection"]
+	path = redirection
+	url = https://github.com/Carcair/redirection.git
