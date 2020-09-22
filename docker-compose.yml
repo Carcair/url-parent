@@ -26,15 +26,16 @@ services:
     ports:
       - 5000:5000
     restart: always
-    links:
-      - rabbitmq
     depends_on:
       - db
       - redirection
+      - rabbitmq
     environment:
       RABBIT_URL: 172.28.1.6
       REDIRECTION_URL: 172.28.1.5
       MYSQL_URL: 172.28.1.7
+      PORT: 5000
+      NODE_ENV: development
 
   redis:
     image: redis
@@ -62,6 +63,8 @@ services:
     environment:
       RABBIT_URL: 172.28.1.6
       REDIS_URL: 172.28.1.8
+      PORT: 5005
+      NODE_ENV: development
 
   rabbitmq:
     image: rabbitmq
