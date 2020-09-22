@@ -2,6 +2,7 @@ version: '3'
 
 services:
   phpmyadmin:
+    container_name: phpmyadmin
     image: phpmyadmin/phpmyadmin:5.0.1
     restart: always
     environment:
@@ -10,56 +11,69 @@ services:
       - '5010:80'
     depends_on:
       - db
+    networks:
+      app_network:
+        ipv4_address: 172.28.1.2
 
   management:
+    container_name: management
     build:
       context: ./management
       dockerfile: Dockerfile
-    working_dir: /usr/app
-    volumes:
-      - ./management:/usr/src/app
     networks:
-      - app-network
-    links:
-      - rabbitmq
+      app_network:
+        ipv4_address: 172.28.1.3
     ports:
       - 5000:5000
     restart: always
+    links:
+      - rabbitmq
     depends_on:
       - db
+      - redirection
+    environment:
+      RABBIT_URL: 172.28.1.6
+      REDIRECTION_URL: 172.28.1.5
+      MYSQL_URL: 172.28.1.7
 
   redis:
     image: redis
-    container_name: cache
-    expose: 
-      - 6379
-
+    container_name: redis
+    ports:
+      - 6379:6379
+    networks:
+      app_network:
+        ipv4_address: 172.28.1.8
 
   redirection:
+    container_name: redirection
     build:
       context: ./redirection
       dockerfile: Dockerfile
-    working_dir: /usr/app
-    volumes:
-      - ./redirection:/usr/src/app
     networks:
-      - app-network
-    links:
-      - rabbitmq
+      app_network:
+        ipv4_address: 172.28.1.5
     ports:
       - 5005:5005
     restart: always
-    links:
+    depends_on:
       - redis
-    environment: 
-      - REDIS_URL=redis://cache
+      - rabbitmq
+    environment:
+      RABBIT_URL: 172.28.1.6
+      REDIS_URL: 172.28.1.8
 
   rabbitmq:
-    image: rabbitmq:3.7.4
+    image: rabbitmq
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
     networks:
-      - app-network
+      app_network:
+        ipv4_address: 172.28.1.6
 
   db:
+    container_name: mysqsl
     build: ./mysql
     command: --default-authentication-plugin=mysql_native_password
     restart: always
@@ -68,7 +82,13 @@ services:
       MYSQL_DATABASE: qJkXGOrBPl
       MYSQL_USER: qJkXGOrBPl
       MYSQL_PASSWORD: 45QgPdf7NP
+    networks:
+      app_network:
+        ipv4_address: 172.28.1.7
 
 networks:
-  app-network:
-    driver: bridge
+  app_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.1.0/16
