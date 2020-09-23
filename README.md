@@ -58,9 +58,11 @@ This repository serves as the main repository which we use to build and start ou
 
 Use Postman to test our Management service. Since Postman is unable to render HTML, use a browser to test the Redirection service.
 
+Inspect Swagger documentation for Management service @ http://localhost:5000/api-docs after starting APP.
+
 **Insert new URL:**
 
-- POST method on route http://localhost:5000/api/create:
+- POST method on route http://localhost:5000/api/create :
   - we are sending data through body as JSON object, set a new header to key: 'Content-Type' and value: 'application/json', data example:
   ```
   {
@@ -74,7 +76,7 @@ Use Postman to test our Management service. Since Postman is unable to render HT
       ```
       {
         "id": 72,
-        "realURL": "https://commonmark.org/help/",
+        "realURL": "https://commonmark.org/help/" ,
         "shortURL": "http://localhost:5005/W5u4at4xr"
       }
       ```
@@ -112,9 +114,10 @@ Use Postman to test our Management service. Since Postman is unable to render HT
 ## Technologies
 
 We used the following technologies:
-  - NodeJS for our main Application services
-  - MySQL database for storing data in the Management service
-  - Redis storage for caching data in the Redirection service
-  - RabbitMQ for transferring messages between the Management and the Redirection service
-  - Docker for creating containers for our services
-  - Compose to run all of our services as one service
+
+- NodeJS for our main Application services
+- MySQL database for storing data in the Management service
+- Redis storage for caching data in the Redirection service
+- RabbitMQ for transferring messages between the Management and the Redirection service
+- Docker for creating containers for our services
+- Compose to run all of our services as one service
