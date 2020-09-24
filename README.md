@@ -24,7 +24,7 @@ This repository serves as the main repository which we use to build and start ou
   or
 
   ```
-  git clone
+  git clone https://github.com/Carcair/url-parent.git
   git submodule init
   git submodule update
   ```
