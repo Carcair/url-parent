@@ -58,7 +58,7 @@ This repository serves as the main repository which we use to build and start ou
 
 Use Postman to test our Management service. Since Postman is unable to render HTML, use a browser to test the Redirection service.
 
-Inspect Swagger documentation for Management service @ http://localhost:5000/api-docs after starting APP.
+Inspect Swagger documentation for Management service @ http://localhost:5000/api-docs , and for Redirection service @ http://localhost:5005/api-docs , after starting APP.
 
 **Insert new URL:**
 
